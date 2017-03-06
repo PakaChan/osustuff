@@ -1,18 +1,37 @@
 
+
 <html>
     <head>
     <title> ctb pp calculate</title> 
+	<style>
+	body {
+		font-size:120%;
+	}
+
+	h3 {
+		margin: 0px;
+	}
+	
+	#note {
+		font-size:65%;
+		margin: 0px;
+	}
+
+	</style>
     <script>
-        function print2(s)
-        {
-                document.getElementById("output2").innerHTML += s + "<br>"
-        }
+	function print2(s)
+	{
+		document.getElementById("output2").innerHTML += s + "<br>"
+	}
 	function fu2()
 	{
 		document.getElementById("output2").innerHTML = "";
 		if (combo.value=='') combo.value=mcombo.value;
 		if (acc.value =='') acc.value=100;
 		if (miss.value =='') miss.value=0;
+		if (combo.value>mcombo.value) combo.value=mcombo.value;
+		if (ar.value>11) ar.value=11;
+		
 		// Conversion from Star rating to pp
 		final = Math.pow(((5*(stars.value)/ 0.0049)-4),2)/100000; 
 		// Length Bonus
@@ -29,13 +48,13 @@
 			final*= 1+  0.025 * (8.0 - ar.value);
 		// Acc Penalty
 		final *=  Math.pow(acc.value/100, 5.5);
-		print2(" " + Math.round(final,3));
-		print2("HD: " +  Math.round(final* (1.05 + 0.075 * (10.0 - Math.min(10, ar.value)))));
-		print2("FL: " +  Math.round(final * 1.35 * lengthbonus));
-		print2("HDFL: " +  Math.round(final* 1.35 * lengthbonus*(1.05 + 0.075 * (10.0 - Math.min(10, ar.value)))));
+		print2( Math.round(100*final)/100 + "pp");
+		print2( Math.round(100*final* (1.05 + 0.075 * (10.0 - Math.min(10, ar.value))))/100+ "pp (+HD) " );
+		print2( Math.round(100*final * 1.35 * lengthbonus)/100+ "pp (+FL) " );
+		print2( Math.round(100*final* 1.35 * lengthbonus*(1.05 + 0.075 * (10.0 - Math.min(10, ar.value))))/100+ "pp (+HDFL) " );
 	}
-    	function clear()
-    	{
+	function clear()
+	{
 		document.getElementById("output2").innerHTML = "";
 		miss.value ='';
 		acc.value ='';
@@ -43,21 +62,43 @@
 		stars.value ='';
 		ar.value ='';
 		mcombo.value ='';
-    	}
+	}
+	function dt()
+	{
+		if (ar.value>5)	ms = 200+(11-ar.value)*100;
+		else ms = 800+(5-ar.value)*80;
+		
+		if (ms<300) ar.value = 11;
+		else if (ms<1200) ar.value = Math.round((11-(ms-300)/150)*100)/100;
+		else ar.value = Math.round((5-(ms-1200)/120)*100)/100;
+	}
     </script> 
     </head>
     
 <body>
-	CTB pp calculator <br><br>
-	Stars: <input type="text" id="stars"><br>
-	AR: <input type=text id="ar"><br>
-	Max Combo: <input type=text id="mcombo"><br>
-	Combo: <input type=text id="combo"> (leave empty if fc)<br>
-	Acc: <input type=text id="acc"> (leave empty if ss)<br>
-	Miss Count: <input type=text id="miss"> (leave empty if 0)<br>
+	<h3>CTB pp calculator</h3>
+	<p id="note">note: star rating is rounded to 2 digits ingame and on the site so values may be off by ~1-2pp<p>
+	Star difficulty: (include DT/HT/HR/EZ if used): <br><input type="text" id="stars"><br>
+	AR: <br><input type=text id="ar"><input type="button" id="buttonDT" onclick="dt()" value="+DT" ><br> 
+	Maximum combo: <br><input type=text id="mcombo"><br>
+	Player Combo: <br><input type=text id="combo"><br>
+	Accuracy (out of 100): <br><input type=text id="acc" value="100"><br>
+	Misses: <br><input type=text id="miss" value="0"><br>
 	<input type="button" id="button2" onclick="fu2()" value="Calculate" >
 	<input type="button" id="buttonClear" onclick="clear()" value="Clear" ><br>
 	<p id="output2">
 	</p>
     </body>
+	
+	<script>
+		function comboSet()
+		{
+			combo.value=mcombo.value;
+		}
+	
+		window.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("mcombo").addEventListener("input", comboSet);
+		});
+
+	</script>
 </html>
