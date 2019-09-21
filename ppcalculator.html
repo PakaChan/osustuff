@@ -2,7 +2,9 @@
 
 <html>
     <head>
-    <title> ctb pp calculate</title> 
+    <title>osu! CTB pp calculator</title> 
+	<meta name="description" content="Calculate PP for a score in osu! CTB">
+
 	<style>
 	body {
 		font-size:120%;
@@ -72,6 +74,15 @@
 		else if (ms<1200) ar.value = Math.round((11-(ms-300)/150)*100)/100;
 		else ar.value = Math.round((5-(ms-1200)/120)*100)/100;
 	}
+	function ht()
+	{
+		if (ar.value>5)	ms = 400+(11-ar.value)*200;
+		else ms = 1600+(5-ar.value)*160;
+		
+		if (ms<600) ar.value = 10;
+		else if (ms<1200) ar.value = Math.round((11-(ms-300)/150)*100)/100;
+		else ar.value = Math.round((5-(ms-1200)/120)*100)/100;
+	}
     </script> 
     </head>
     
@@ -79,7 +90,9 @@
 	<h3>CTB pp calculator</h3>
 	<p id="note">note: star rating is rounded to 2 digits ingame and on the site so values may be off by ~1-2pp<p>
 	Star difficulty: (include DT/HT/HR/EZ if used): <br><input type="text" id="stars"><br>
-	AR: <br><input type=text id="ar"><input type="button" id="buttonDT" onclick="dt()" value="+DT" ><br> 
+	AR: <br><input type=text id="ar">
+	<input type="button" id="buttonDT" onclick="dt()" value="+DT" >
+	<input type="button" id="buttonHT" onclick="ht()" value="+HT" ><br> 
 	Maximum combo: <br><input type=text id="mcombo"><br>
 	Player Combo: <br><input type=text id="combo"><br>
 	Accuracy (out of 100): <br><input type=text id="acc" value="100"><br>
