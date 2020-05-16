@@ -3,6 +3,7 @@
 <html>
     <head>
     <title>osu! CTB pp calculator</title> 
+	<p> Updated 16/05/2020 </p>
 	<meta name="description" content="Calculate PP for a score in osu! CTB">
 
 	<style>
@@ -37,23 +38,33 @@
 		// Conversion from Star rating to pp
 		final = Math.pow(((5*(stars.value)/ 0.0049)-4),2)/100000; 
 		// Length Bonus
-		lengthbonus = (0.95 + 0.4 * Math.min(1.0, mcombo.value / 3000.0) + (mcombo.value > 3000 ? Math.log10(mcombo.value / 3000.0) * 0.5 : 0.0));
+		lengthbonus = (0.95 + 0.3 * Math.min(1.0, mcombo.value / 2500.0) + (mcombo.value > 2500 ? Math.log10(mcombo.value / 2500.0) * 0.475 : 0.0));
 		final *= lengthbonus;
 		// Miss Penalty
 		final *= Math.pow(0.97, miss.value);
 		// Not FC combo penalty
 		final *= Math.pow(combo.value/mcombo.value,0.8);
 		// AR Bonus
+		arbonus = 1;
 		if (ar.value>9)
-			final*= 1+  0.1 * (ar.value - 9.0);
+			arbonus+= 0.1 * (ar.value - 9.0);
+		if (ar.value>10)
+			arbonus+= 0.1 * (ar.value - 10.0);
 		if (ar.value<8)
-			final*= 1+  0.025 * (8.0 - ar.value);
+			arbonus+= 0.025 * (8.0 - ar.value);
+		final *= arbonus;
+		// Hidden bonus
+		hiddenbonus = 1;
+		if (ar.value>10)
+			hiddenbonus= 1.01 + 0.04 * (11 - Math.min(11,ar.value));
+		else
+			hiddenbonus= 1.05 + 0.075 * (10 - ar.value);
 		// Acc Penalty
 		final *=  Math.pow(acc.value/100, 5.5);
 		print2( Math.round(100*final)/100 + "pp");
-		print2( Math.round(100*final* (1.05 + 0.075 * (10.0 - Math.min(10, ar.value))))/100+ "pp (+HD) " );
-		print2( Math.round(100*final * 1.35 * lengthbonus)/100+ "pp (+FL) " );
-		print2( Math.round(100*final* 1.35 * lengthbonus*(1.05 + 0.075 * (10.0 - Math.min(10, ar.value))))/100+ "pp (+HDFL) " );
+		print2( Math.round(100*final*hiddenbonus)/100+ "pp (+HD) " );
+		print2( Math.round(100*final* 1.35 * lengthbonus)/100+ "pp (+FL) " );
+		print2( Math.round(100*final* 1.35 * lengthbonus* hiddenbonus)/100+ "pp (+HDFL) " );
 	}
 	function clear()
 	{
